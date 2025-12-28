@@ -1,0 +1,208 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-FileCopyrightText: 2025 Hyperpolymath <hyperpolymath@proton.me>
+= hesiod-dns-map
+:icons: font
+:toc: left
+:toclevels: 3
+
+== Purpose
+
+HS-class DNS zone files, Hesiod naming, and resource mapping for the FlatRacoon Network Stack.
+
+Implements the Hesiod naming system (RFC 1535 adjacent) for service discovery and resource location within the private network.
+
+Part of the link:https://github.com/hyperpolymath/flatracoon-netstack[FlatRacoon Network Stack].
+
+== Architecture
+
+[source]
+----
+              ┌─────────────────────────┐
+              │   Hesiod DNS Server     │
+              │   (This Module)         │
+              │   ─────────────────     │
+              │   • HS class records    │
+              │   • Service location    │
+              │   • User/group mapping  │
+              └───────────┬─────────────┘
+                          │
+       ┌──────────────────┼──────────────────┐
+       │                  │                  │
+┌──────▼──────┐    ┌──────▼──────┐    ┌──────▼──────┐
+│  Services   │    │   Users     │    │  Resources  │
+│  .service   │    │  .passwd    │    │  .filsys    │
+└─────────────┘    └─────────────┘    └─────────────┘
+----
+
+== What is Hesiod?
+
+Hesiod is a DNS-based naming system developed at MIT's Project Athena. It uses the HS (Hesiod) DNS class to provide:
+
+* **Service discovery** - Locate services by name
+* **User information** - passwd/group lookups via DNS
+* **Resource mapping** - Mount points, printers, etc.
+* **Configuration distribution** - Centralized config via DNS
+
+== Components
+
+* **HS-class zone files** - Hesiod DNS records
+* **Service registry** - FlatRacoon service locations
+* **User/group mapping** - Integration with authentication
+* **Resource definitions** - Storage, compute, network resources
+* **Dynamic updates** - RFC 2136 compliant updates
+
+== Directory Structure
+
+[source]
+----
+hesiod-dns-map/
+├── zones/
+│   ├── flatracoon.hs          # Main Hesiod zone
+│   ├── service.hs             # Service locations
+│   ├── passwd.hs              # User mappings
+│   ├── group.hs               # Group mappings
+│   └── filsys.hs              # Filesystem mappings
+├── configs/
+│   ├── named.ncl              # BIND/Knot configuration
+│   ├── hesiod.ncl             # Hesiod-specific settings
+│   └── dynamic.ncl            # Dynamic update policies
+├── scripts/
+│   ├── generate-zones.sh      # Zone file generation
+│   ├── update-service.sh      # Service registration
+│   └── sync-users.sh          # User sync from LDAP/AD
+├── manifests/
+│   ├── deployment.yaml
+│   └── service.yaml
+├── Justfile
+├── README.adoc
+├── STATE.scm
+├── META.scm
+└── ECOSYSTEM.scm
+----
+
+== Inputs
+
+[cols="1,2,1"]
+|===
+| Input | Description | Source
+
+| Service registry
+| Service name → address mappings
+| FlatRacoon modules
+
+| User database
+| User/group information
+| LDAP/AD or local
+
+| Resource definitions
+| Storage and compute resources
+| Infrastructure config
+
+| Zone configuration
+| DNS zone parameters
+| configs/hesiod.ncl
+|===
+
+== Outputs
+
+[cols="1,2"]
+|===
+| Output | Description
+
+| HS-class DNS server
+| Hesiod-enabled DNS resolver
+
+| Service discovery
+| `host -t TXT twingate.service.flatracoon HS`
+
+| User lookups
+| `hesinfo username passwd`
+
+| Resource mapping
+| Mount points, printers, etc.
+|===
+
+== Example Hesiod Records
+
+=== Service Location
+[source,dns]
+----
+; Service: twingate
+twingate.service    HS  TXT "twingate-connector.default.svc.cluster.local:443"
+
+; Service: ipfs-gateway
+ipfs-gateway.service HS TXT "ipfs-gateway.ipfs.svc.cluster.local:8080"
+
+; Service: zerotier-api
+zerotier-api.service HS TXT "zerotier-api.zerotier.svc.cluster.local:9993"
+----
+
+=== User Information
+[source,dns]
+----
+; User: admin
+admin.passwd    HS  TXT "admin:*:1000:1000:Admin User:/home/admin:/bin/bash"
+
+; Group: operators
+operators.group HS  TXT "operators:*:1001:admin,user1,user2"
+----
+
+=== Filesystem Mapping
+[source,dns]
+----
+; Mount: ipfs-data
+ipfs-data.filsys    HS  TXT "AFS /afs/flatracoon/ipfs rw"
+----
+
+== Integration Points
+
+=== With FlatRacoon Stack
+
+* **All modules** - Service discovery via Hesiod
+* **twingate-helm-deploy** - Registered as service
+* **ipfs-overlay** - Bootstrap nodes via Hesiod
+* **network-dashboard** - DNS health monitoring
+
+=== Machine-Readable Manifest
+
+[source,json]
+----
+{
+  "module": "hesiod-dns-map",
+  "version": "0.1.0",
+  "layer": "naming",
+  "requires": ["bind", "kubernetes"],
+  "provides": ["hesiod-dns", "service-discovery", "user-lookup"],
+  "config_schema": "configs/schema.ncl",
+  "health_endpoint": "/dns/health",
+  "metrics_endpoint": "/dns/metrics"
+}
+----
+
+== Quick Start
+
+[source,bash]
+----
+# 1. Generate zone files from registry
+just generate-zones
+
+# 2. Deploy Hesiod DNS server
+just deploy
+
+# 3. Test service discovery
+just query twingate.service
+
+# 4. Register new service
+just register-service myapp 10.0.0.50:8080
+----
+
+== Status
+
+[horizontal]
+Phase:: Scaffolding
+Completion:: 5%
+Next:: Zone file templates and BIND configuration
+
+== License
+
+AGPL-3.0-or-later
