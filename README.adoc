@@ -1,10 +1,13 @@
-image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[MPL-2.0,link="https://opensource.org/licenses/MPL-2.0"]
+image:https://img.shields.io/badge/license-PMPL--1.0-blue.svg[License,link="https://github.com/hyperpolymath/palimpsest-license"]
 image:https://img.shields.io/badge/Philosophy-Palimpsest-purple.svg[Palimpsest,link="https://github.com/hyperpolymath/palimpsest-licence"]
 
 
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: PMPL-1.0
 // SPDX-FileCopyrightText: 2025 Hyperpolymath <hyperpolymath@proton.me>
 = hesiod-dns-map
+
+
+
 
 :icons: font
 :toc: left
@@ -41,7 +44,7 @@ Part of the link:https://github.com/hyperpolymath/flatracoon-netstack[FlatRacoon
 
 == What is Hesiod?
 
-Hesiod is a DNS-based naming system developed at MIT's Project Athena. It uses the HS (Hesiod) DNS class to provide:
+Hesiod is a DNS-based naming system developed at PMPL-1.0's Project Athena. It uses the HS (Hesiod) DNS class to provide:
 
 * **Service discovery** - Locate services by name
 * **User information** - passwd/group lookups via DNS
@@ -210,4 +213,4 @@ Next:: Zone file templates and BIND configuration
 
 == License
 
-AGPL-3.0-or-later
+PMPL-1.0-or-later
