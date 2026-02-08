@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+
+[package]
+name = "hesinfo"
+description = "CLI for Hesiod DNS naming system - query, serve, and manage HS-class zones"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+hesiod-lib = { path = "../hesiod-lib" }
+hickory-proto = "0.25"
+clap = { version = "4.5", features = ["derive"] }
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
