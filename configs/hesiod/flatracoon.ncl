@@ -1,0 +1,90 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Hesiod DNS configuration for FlatRacoon network stack
+
+let schema = import "schema.ncl"
+in
+
+{
+  domain = "flatracoon.internal",
+  lhs = ".ns",
+  rhs = ".flatracoon.internal",
+  ttl = 300,
+  dns_port = 53,
+  http_port = 8080,
+
+  services = [
+    {
+      name = "twingate",
+      host = "twingate.svc",
+      port = 443,
+      protocol = "tcp",
+    },
+    {
+      name = "zerotier-api",
+      host = "zerotier.svc",
+      port = 9993,
+      protocol = "udp",
+    },
+    {
+      name = "ipfs-gateway",
+      host = "ipfs.svc",
+      port = 8080,
+      protocol = "tcp",
+    },
+    {
+      name = "ipfs-api",
+      host = "ipfs.svc",
+      port = 5001,
+      protocol = "tcp",
+    },
+    {
+      name = "orchestrator",
+      host = "orchestrator.svc",
+      port = 4000,
+      protocol = "tcp",
+    },
+    {
+      name = "dashboard",
+      host = "dashboard.svc",
+      port = 4001,
+      protocol = "tcp",
+    },
+  ],
+
+  users = [
+    {
+      username = "admin",
+      uid = 1000,
+      gid = 1000,
+      gecos = "FlatRacoon Admin",
+      home = "/home/admin",
+      shell = "/bin/bash",
+    },
+    {
+      username = "operator",
+      uid = 1001,
+      gid = 1001,
+      gecos = "FlatRacoon Operator",
+      home = "/home/operator",
+      shell = "/bin/bash",
+    },
+  ],
+
+  groups = [
+    {
+      name = "operators",
+      gid = 1001,
+      members = ["admin", "operator"],
+    },
+    {
+      name = "netadmin",
+      gid = 1002,
+      members = ["admin"],
+    },
+    {
+      name = "monitoring",
+      gid = 1003,
+      members = ["admin", "operator"],
+    },
+  ],
+} | schema.HesiodConfig
