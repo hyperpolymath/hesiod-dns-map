@@ -7,6 +7,7 @@
 //!   generate - Generate a BIND-format zone file
 //!   validate - Validate a zone file
 
+#![forbid(unsafe_code)]
 use std::path::PathBuf;
 
 use anyhow::{Context, Result};
