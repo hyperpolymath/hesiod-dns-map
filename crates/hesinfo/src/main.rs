@@ -71,8 +71,7 @@ enum Commands {
 async fn main() -> Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(
-            tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "info".into()),
+            tracing_subscriber::EnvFilter::try_from_default_env().unwrap_or_else(|_| "info".into()),
         )
         .init();
 
@@ -129,12 +128,10 @@ async fn cmd_lookup(key: &str, map: &str, server: &str, port: u16) -> Result<()>
     sock.send_to(&wire, &addr).await?;
 
     let mut buf = vec![0u8; 4096];
-    let (len, _) = tokio::time::timeout(
-        std::time::Duration::from_secs(5),
-        sock.recv_from(&mut buf),
-    )
-    .await
-    .context("DNS query timed out")??;
+    let (len, _) =
+        tokio::time::timeout(std::time::Duration::from_secs(5), sock.recv_from(&mut buf))
+            .await
+            .context("DNS query timed out")??;
 
     let response = Message::from_vec(&buf[..len])?;
 
@@ -199,7 +196,11 @@ fn cmd_validate(file: &std::path::Path) -> Result<()> {
     for (line_no, line) in content.lines().enumerate() {
         let line = line.trim();
         // Skip comments and empty lines
-        if line.is_empty() || line.starts_with(';') || line.starts_with('$') || line.starts_with('@') {
+        if line.is_empty()
+            || line.starts_with(';')
+            || line.starts_with('$')
+            || line.starts_with('@')
+        {
             continue;
         }
         // Look for HS TXT lines
