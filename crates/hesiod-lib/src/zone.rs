@@ -51,7 +51,9 @@ impl HesiodZone {
 
     /// Iterate over all records.
     pub fn records(&self) -> impl Iterator<Item = (&str, &HesiodRecord)> {
-        self.records.iter().map(|((name, _), rec)| (name.as_str(), rec))
+        self.records
+            .iter()
+            .map(|((name, _), rec)| (name.as_str(), rec))
     }
 
     /// Build a zone from a `HesiodConfig`.
@@ -125,7 +127,12 @@ impl HesiodZone {
                 .push((name.as_str(), record));
         }
 
-        let section_order = [MapType::Service, MapType::Passwd, MapType::Group, MapType::Filsys];
+        let section_order = [
+            MapType::Service,
+            MapType::Passwd,
+            MapType::Group,
+            MapType::Filsys,
+        ];
         let section_labels = [
             "Service records",
             "Passwd records",

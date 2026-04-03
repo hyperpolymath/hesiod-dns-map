@@ -100,10 +100,7 @@ fn handle_query(data: &[u8], state: &DnsServerState) -> Result<Vec<u8>> {
         let qclass_raw: u16 = query.query_class().into();
         let qtype = query.query_type();
 
-        debug!(
-            "query: {} class={} type={:?}",
-            name, qclass_raw, qtype
-        );
+        debug!("query: {} class={} type={:?}", name, qclass_raw, qtype);
 
         // Only handle HS class (4) or IN class (1) as fallback
         if qclass_raw != DNS_CLASS_HS && qclass_raw != u16::from(DNSClass::IN) {
@@ -117,7 +114,8 @@ fn handle_query(data: &[u8], state: &DnsServerState) -> Result<Vec<u8>> {
 
         if let Some(txt_data) = resolve_name(name, &state.zone) {
             let txt_rdata = TXT::new(vec![txt_data.clone()]);
-            let mut record = Record::from_rdata(name.clone(), state.zone.ttl, RData::TXT(txt_rdata));
+            let mut record =
+                Record::from_rdata(name.clone(), state.zone.ttl, RData::TXT(txt_rdata));
             record.set_dns_class(DNSClass::HS);
             response.add_answer(record);
         } else {

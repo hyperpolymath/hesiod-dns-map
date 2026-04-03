@@ -4,6 +4,7 @@
 //! Provides HS-class TXT record management, a lightweight UDP DNS server,
 //! and HTTP health/metrics endpoints for FlatRacoon network stack integration.
 
+#![forbid(unsafe_code)]
 pub mod config;
 pub mod health;
 pub mod records;

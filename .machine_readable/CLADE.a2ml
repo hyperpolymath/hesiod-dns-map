@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Clade declaration — part of the gv-clade-index registry
+# See: https://github.com/hyperpolymath/gv-clade-index
+
+[identity]
+uuid = "7fd5917b-aeb9-5ca8-aeaf-d9319e70fc6a"
+primary-forge = "github"
+primary-owner = "hyperpolymath"
+canonical-name = "hesiod-dns-map"
+prefixed-name = "ix-hesiod-dns-map"
+
+[clade]
+primary = "ix"
+secondary = []
+assigned = "2026-03-16"
+rationale = ""
+
+[forges]
+github = "hyperpolymath/hesiod-dns-map"
+gitlab = "hyperpolymath/hesiod-dns-map"
+bitbucket = "hyperpolymath/hesiod-dns-map"
+
+[lineage]
+type = "standalone"
+parent = "DNS mapping via Hesiod"
+born = "2026-03-16"

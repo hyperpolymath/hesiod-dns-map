@@ -4,7 +4,7 @@
 
 use std::fmt;
 
-use anyhow::{bail, Context, Result};
+use anyhow::{Context, Result, bail};
 use serde::{Deserialize, Serialize};
 
 /// Map types corresponding to Hesiod naming conventions.
@@ -75,7 +75,10 @@ impl PasswdRecord {
     pub fn from_txt(txt: &str) -> Result<Self> {
         let parts: Vec<&str> = txt.splitn(7, ':').collect();
         if parts.len() != 7 {
-            bail!("passwd record requires 7 colon-separated fields, got {}", parts.len());
+            bail!(
+                "passwd record requires 7 colon-separated fields, got {}",
+                parts.len()
+            );
         }
         Ok(Self {
             username: parts[0].to_string(),
@@ -115,7 +118,10 @@ impl GroupRecord {
     pub fn from_txt(txt: &str) -> Result<Self> {
         let parts: Vec<&str> = txt.splitn(4, ':').collect();
         if parts.len() != 4 {
-            bail!("group record requires 4 colon-separated fields, got {}", parts.len());
+            bail!(
+                "group record requires 4 colon-separated fields, got {}",
+                parts.len()
+            );
         }
         let members = if parts[3].is_empty() {
             Vec::new()
@@ -157,7 +163,10 @@ impl ServiceRecord {
     pub fn from_txt(txt: &str) -> Result<Self> {
         let parts: Vec<&str> = txt.splitn(3, ':').collect();
         if parts.len() != 3 {
-            bail!("service record requires 3 colon-separated fields, got {}", parts.len());
+            bail!(
+                "service record requires 3 colon-separated fields, got {}",
+                parts.len()
+            );
         }
         Ok(Self {
             host: parts[0].to_string(),
@@ -188,13 +197,19 @@ pub struct FilsysRecord {
 
 impl FilsysRecord {
     pub fn to_txt(&self) -> String {
-        format!("{} {} {} {}", self.fs_type, self.mount_path, self.source, self.mode)
+        format!(
+            "{} {} {} {}",
+            self.fs_type, self.mount_path, self.source, self.mode
+        )
     }
 
     pub fn from_txt(txt: &str) -> Result<Self> {
         let parts: Vec<&str> = txt.splitn(4, ' ').collect();
         if parts.len() != 4 {
-            bail!("filsys record requires 4 space-separated fields, got {}", parts.len());
+            bail!(
+                "filsys record requires 4 space-separated fields, got {}",
+                parts.len()
+            );
         }
         Ok(Self {
             fs_type: parts[0].to_string(),
@@ -289,7 +304,10 @@ mod tests {
             shell: "/bin/bash".into(),
         };
         let txt = record.to_txt();
-        assert_eq!(txt, "admin:*:1000:1000:FlatRacoon Admin:/home/admin:/bin/bash");
+        assert_eq!(
+            txt,
+            "admin:*:1000:1000:FlatRacoon Admin:/home/admin:/bin/bash"
+        );
         let parsed = PasswdRecord::from_txt(&txt).unwrap();
         assert_eq!(record, parsed);
     }
