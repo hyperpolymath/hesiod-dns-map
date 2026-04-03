@@ -3,12 +3,12 @@
 
 use std::sync::Arc;
 
+use axum::Router;
 use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::Json;
 use axum::routing::{get, post};
-use axum::Router;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use tracing::info;
 
 use crate::server::DnsServerState;
@@ -35,9 +35,7 @@ async fn health_check(State(state): State<Arc<DnsServerState>>) -> Json<Value> {
 
 /// `GET /dns/metrics` - Returns query count and performance metrics.
 async fn metrics(State(state): State<Arc<DnsServerState>>) -> Json<Value> {
-    let query_count = state
-        .query_count
-        .load(std::sync::atomic::Ordering::Relaxed);
+    let query_count = state.query_count.load(std::sync::atomic::Ordering::Relaxed);
     let uptime = state.start_time.elapsed().as_secs();
     let qps = if uptime > 0 {
         query_count as f64 / uptime as f64
