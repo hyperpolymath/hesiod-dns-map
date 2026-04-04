@@ -4,13 +4,13 @@
     "team"
   ],
   "capabilities": {
-    "primary": {
-      "description": "TODO: describe this service's primary capability",
+    "http": {
+      "description": "HTTP service mapping Hesiod DNS records to structured network topology data.",
       "endpoint": "/api",
       "panel_compatible": true,
       "protocol": "http",
       "requires_auth": false,
-      "type": "custom"
+      "type": "http"
     }
   },
   "consumes": [],
