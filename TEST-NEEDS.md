@@ -1,6 +1,8 @@
 <!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
 # TEST-NEEDS.md - CRG C Achievement Report
 
+## CRG Grade: C — ACHIEVED 2026-04-04
+
 ## Executive Summary
 
 hesiod-dns-map has been upgraded to **CRG Grade C** with comprehensive test coverage across all required test categories.
