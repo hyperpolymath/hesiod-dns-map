@@ -21,3 +21,9 @@ axum = "0.8"
 
 [dev-dependencies]
 tokio = { version = "1", features = ["test-util", "macros"] }
+proptest.workspace = true
+criterion.workspace = true
+
+[[bench]]
+name = "dns_bench"
+harness = false

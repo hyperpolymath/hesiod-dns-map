@@ -5,10 +5,34 @@
 [metadata]
 project = "hesiod-dns-map"
 version = "0.1.0"
-last-updated = "2026-03-15"
+last-updated = "2026-04-04"
 status = "active"
+crg-grade = "C"
 
 [project-context]
 name = "hesiod-dns-map"
-completion-percentage = 0
-phase = "In development"
+completion-percentage = 85
+phase = "Testing & Quality (CRG C)"
+
+[test-coverage]
+unit-tests = 16
+property-tests = 12
+e2e-tests = 9
+aspect-tests = 17
+contract-tests = 16
+benchmark-scenarios = 10
+total-tests = "70+"
+status = "All passing"
+
+[recent-work]
+session-date = "2026-04-04"
+work-done = [
+  "Added proptest property-based tests (12 scenarios)",
+  "Added E2E integration tests (9 scenarios)",
+  "Added security aspect tests (17 scenarios)",
+  "Added contract/reflexive tests (16 scenarios)",
+  "Added Criterion benchmarks (10+ scenarios)",
+  "Updated Cargo.toml with test dependencies",
+  "Created TEST-NEEDS.md documenting CRG C achievement"
+]
+notes = "All 70+ tests passing. CRG Grade C achieved."
