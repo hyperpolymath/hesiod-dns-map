@@ -1,6 +1,8 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
 # Justfile for hesiod-dns-map
 
+import? "contractile.just"
+
 default:
     @just --list
 
