@@ -308,7 +308,7 @@ mod tests {
             txt,
             "admin:*:1000:1000:FlatRacoon Admin:/home/admin:/bin/bash"
         );
-        let parsed = PasswdRecord::from_txt(&txt).unwrap();
+        let parsed = PasswdRecord::from_txt(&txt).expect("TODO: handle error");
         assert_eq!(record, parsed);
     }
 
@@ -321,7 +321,7 @@ mod tests {
         };
         let txt = record.to_txt();
         assert_eq!(txt, "operators:*:1001:admin,operator");
-        let parsed = GroupRecord::from_txt(&txt).unwrap();
+        let parsed = GroupRecord::from_txt(&txt).expect("TODO: handle error");
         assert_eq!(record, parsed);
     }
 
@@ -334,7 +334,7 @@ mod tests {
         };
         let txt = record.to_txt();
         assert_eq!(txt, "empty:*:9999:");
-        let parsed = GroupRecord::from_txt(&txt).unwrap();
+        let parsed = GroupRecord::from_txt(&txt).expect("TODO: handle error");
         assert_eq!(parsed.members, Vec::<String>::new());
     }
 
@@ -347,7 +347,7 @@ mod tests {
         };
         let txt = record.to_txt();
         assert_eq!(txt, "twingate.svc:443:tcp");
-        let parsed = ServiceRecord::from_txt(&txt).unwrap();
+        let parsed = ServiceRecord::from_txt(&txt).expect("TODO: handle error");
         assert_eq!(record, parsed);
     }
 
@@ -361,7 +361,7 @@ mod tests {
         };
         let txt = record.to_txt();
         assert_eq!(txt, "nfs /home nfsserver:/export rw");
-        let parsed = FilsysRecord::from_txt(&txt).unwrap();
+        let parsed = FilsysRecord::from_txt(&txt).expect("TODO: handle error");
         assert_eq!(record, parsed);
     }
 
@@ -373,14 +373,14 @@ mod tests {
             protocol: "tcp".into(),
         });
         let txt = record.to_txt();
-        let parsed = HesiodRecord::from_txt(MapType::Service, &txt).unwrap();
+        let parsed = HesiodRecord::from_txt(MapType::Service, &txt).expect("TODO: handle error");
         assert_eq!(record, parsed);
     }
 
     #[test]
     fn map_type_parse() {
-        assert_eq!("passwd".parse::<MapType>().unwrap(), MapType::Passwd);
-        assert_eq!("GROUP".parse::<MapType>().unwrap(), MapType::Group);
+        assert_eq!("passwd".parse::<MapType>().expect("TODO: handle error"), MapType::Passwd);
+        assert_eq!("GROUP".parse::<MapType>().expect("TODO: handle error"), MapType::Group);
         assert!("bogus".parse::<MapType>().is_err());
     }
 }

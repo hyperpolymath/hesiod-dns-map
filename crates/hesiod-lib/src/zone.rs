@@ -200,19 +200,19 @@ mod tests {
     #[test]
     fn zone_from_config() {
         let config = sample_config();
-        let zone = HesiodZone::from_config(&config).unwrap();
+        let zone = HesiodZone::from_config(&config).expect("TODO: handle error");
         assert_eq!(zone.record_count(), 3);
     }
 
     #[test]
     fn zone_lookup() {
         let config = sample_config();
-        let zone = HesiodZone::from_config(&config).unwrap();
+        let zone = HesiodZone::from_config(&config).expect("TODO: handle error");
 
-        let svc = zone.lookup("web", MapType::Service).unwrap();
+        let svc = zone.lookup("web", MapType::Service).expect("TODO: handle error");
         assert_eq!(svc.to_txt(), "web.svc:443:tcp");
 
-        let user = zone.lookup("admin", MapType::Passwd).unwrap();
+        let user = zone.lookup("admin", MapType::Passwd).expect("TODO: handle error");
         assert!(user.to_txt().starts_with("admin:*:1000"));
 
         assert!(zone.lookup("nonexistent", MapType::Passwd).is_none());
@@ -221,7 +221,7 @@ mod tests {
     #[test]
     fn zone_bind_output() {
         let config = sample_config();
-        let zone = HesiodZone::from_config(&config).unwrap();
+        let zone = HesiodZone::from_config(&config).expect("TODO: handle error");
         let bind = zone.to_bind_zone();
 
         assert!(bind.contains("$ORIGIN .test.internal."));
@@ -243,7 +243,7 @@ mod tests {
                 mode: "rw".into(),
             }),
         );
-        let rec = zone.lookup("home", MapType::Filsys).unwrap();
+        let rec = zone.lookup("home", MapType::Filsys).expect("TODO: handle error");
         assert_eq!(rec.to_txt(), "nfs /home nfs:/export rw");
     }
 }

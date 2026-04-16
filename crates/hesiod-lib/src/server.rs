@@ -176,13 +176,13 @@ mod tests {
             users: vec![],
             groups: vec![],
         };
-        HesiodZone::from_config(&config).unwrap()
+        HesiodZone::from_config(&config).expect("TODO: handle error")
     }
 
     #[test]
     fn resolve_service_name() {
         let zone = test_zone();
-        let name: Name = "web.service.ns.test.internal".parse().unwrap();
+        let name: Name = "web.service.ns.test.internal".parse().expect("TODO: handle error");
         let result = resolve_name(&name, &zone);
         assert_eq!(result, Some("web.svc:443:tcp".into()));
     }
@@ -190,14 +190,14 @@ mod tests {
     #[test]
     fn resolve_missing_name() {
         let zone = test_zone();
-        let name: Name = "missing.service.ns.test.internal".parse().unwrap();
+        let name: Name = "missing.service.ns.test.internal".parse().expect("TODO: handle error");
         assert!(resolve_name(&name, &zone).is_none());
     }
 
     #[test]
     fn resolve_wrong_suffix() {
         let zone = test_zone();
-        let name: Name = "web.service.ns.other.internal".parse().unwrap();
+        let name: Name = "web.service.ns.other.internal".parse().expect("TODO: handle error");
         assert!(resolve_name(&name, &zone).is_none());
     }
 }

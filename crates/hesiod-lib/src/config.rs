@@ -101,7 +101,7 @@ mod tests {
             "lhs": ".ns",
             "rhs": ".example.internal"
         }"#;
-        let config = HesiodConfig::from_json(json).unwrap();
+        let config = HesiodConfig::from_json(json).expect("TODO: handle error");
         assert_eq!(config.domain, "example.internal");
         assert_eq!(config.ttl, 300);
         assert_eq!(config.dns_port, 53);
@@ -127,7 +127,7 @@ mod tests {
                 {"name": "ops", "gid": 1001, "members": ["admin"]}
             ]
         }"#;
-        let config = HesiodConfig::from_json(json).unwrap();
+        let config = HesiodConfig::from_json(json).expect("TODO: handle error");
         assert_eq!(config.ttl, 600);
         assert_eq!(config.services.len(), 1);
         assert_eq!(config.users.len(), 1);
