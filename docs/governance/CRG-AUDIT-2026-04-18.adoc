@@ -1,0 +1,834 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+
+= hesiod-dns-map — CRG Audit (2026-04-18)
+Jonathan D.A. Jewell
+2026-04-18
+:toc:
+:sectnums:
+
+== Scope and Standard
+
+Evaluates the `developer-ecosystem/hesiod-dns-map` repository against
+*Component Readiness Grades v2.0 (STRICT)*, 2026-03-30 revision.
+hesiod-dns-map is self-declared *C* in STATE.a2ml (`[metadata]
+crg-grade = "C"`, last-updated 2026-04-04) with a dedicated
+`TEST-NEEDS.md` titled "CRG Grade: C — ACHIEVED 2026-04-04" and a
+claimed `completion-percentage = 85`. Canonical location is this
+repo (has a real `.git` directory); a nested mirror exists at
+`systems-ecosystem/flatracoon/netstack/modules/hesiod-dns-map/` via
+submodule. The audit checks the C claim against on-disk evidence,
+dogfooding signal, and the v2.0 "honest D > dishonest B" clause,
+and records canonical-vs-nested drift.
+
+- Standard: `standards/component-readiness-grades/COMPONENT-READINESS-GRADES.md`
+- Criteria boilerplate: `rsr-template-repo/docs/governance/CRG-CRITERIA.adoc`
+- Audit template: `rsr-template-repo/docs/governance/CRG-AUDIT-TEMPLATE.adoc`
+- Self-declared grade (prior art):
+  * `.machine_readable/6a2/STATE.a2ml` `[metadata] crg-grade = "C"`,
+    last-updated 2026-04-04.
+  * `[project-context] completion-percentage = 85`,
+    `phase = "Testing & Quality (CRG C)"`.
+  * `TEST-NEEDS.md` header: "CRG Grade: C — ACHIEVED 2026-04-04".
+- Audit date: 2026-04-18
+- Auditor: Jonathan D.A. Jewell
+
+Schema note: hesiod-dns-map uses the flat `crg-grade = "C"` key
+under `[metadata]` — the exact shape HYP-S005 matches. No
+`crg-grade-previous` audit trail key yet.
+
+The audit grades the repo *as-is today*, not aspirationally.
+
+== v2.0 Strictness Recap
+
+[cols="1,3,4"]
+|===
+| Grade | Release Stage | Hard Requirement (v2.0)
+
+| X | None             | Untested.
+| F | Reject           | Harmful, wasteful, or superseded.
+| E | Pre-alpha        | >=1 test, failures documented.
+| D | Alpha            | Test matrix + scope documented + *RSR compliance mandatory*.
+| C | Alpha-stable     | Dogfooded, CI green, *deep per-file + per-directory annotation*.
+| B | Beta             | 6+ *diverse* external targets, issues fed back.
+| A | Stable           | Real-world external feedback confirms value; no harm.
+|===
+
+Publication requires B+. Long alpha is discipline, not shame.
+
+== Evidence Inventory (verified 2026-04-18)
+
+=== Structural compliance (Grade D floor)
+
+[cols="2,1,3"]
+|===
+| Item | State | Source
+
+| RSR mandatory workflows (17+)
+| PRESENT (20 YAML files in `.github/workflows/`)
+| `.github/workflows/` — canonical set present: hypatia-scan, codeql,
+  scorecard, scorecard-enforcer, rsr-antipattern, guix-nix-policy,
+  rust-ci, mirror, instant-sync, secret-scanner, security-policy,
+  wellknown-enforcement, workflow-linter, quality, ts-blocker,
+  npm-bun-blocker, casket-pages, boj-build, dogfood-gate,
+  codeql.yml. All pinned SHAs (rust-ci.yml line 25 uses
+  `actions/checkout@34e11487…` v4 — legacy, canonical is now v6.0.2
+  but v4 entries are permitted for reading; worth bumping, not a
+  D-breaker).
+
+| `.machine_readable/6a2/` canonical A2ML
+| PRESENT (STATE 993 B, META 275 B, ECOSYSTEM 228 B, AGENTIC 798 B,
+  NEUROSYM 393 B, PLAYBOOK 631 B — all six)
+| STATE has substantive content (45 lines). The other five are
+  schema skeletons: META (10 lines; just `project/author/license/standard`),
+  ECOSYSTEM (10 lines; `type = "component"` and nothing else),
+  AGENTIC (~25 lines of boilerplate permissions), NEUROSYM (14 lines;
+  `report-format = "logtalk"` — **stale**; Hypatia removed Logtalk
+  2026-04-12, this field is now invalid), PLAYBOOK (all sections
+  commented-out stubs). *Five of six 6a2 files are template stubs,
+  not documentation.*
+
+| `0-AI-MANIFEST.a2ml`
+| PRESENT (4 174 bytes)
+| Root
+
+| `README.adoc`, `EXPLAINME.adoc`, `CONTRIBUTING.md`, `SECURITY.md`,
+  `MAINTAINERS.adoc`, `CODE_OF_CONDUCT.md`, `ROADMAP.adoc`,
+  `PALIMPSEST.adoc`, `NOTICE`, `TOPOLOGY.md`,
+  `QUICKSTART-{DEV,USER,MAINTAINER}.adoc`
+| PRESENT
+| Root. Unusually complete root-level surface. `EXPLAINME.adoc` is
+  *577 bytes* — a stub with a single-row File Map (see Annotation).
+
+| `docs/` orientation subtree
+| *thin* — only `docs/accessibility/README.adoc` and
+  `docs/compliance/ACCESSIBILITY.adoc` (until this audit created
+  `docs/governance/`). No `docs/architecture/`, `docs/decisions/`,
+  `docs/practice/`, `docs/specification/`.
+| Two accessibility-related files; no architecture or decision log.
+
+| `LICENSE` + `LICENSES/` directory
+| PRESENT (`LICENSE` is PMPL-1.0-or-later full text,
+  `LICENSES/PMPL-1.0-or-later.txt`, `LICENSES/MPL-2.0.txt`)
+| Root. Committed 2026-04-17 in `cf4c591 chore: update LICENSE to
+  PMPL-1.0-or-later with MPL-2.0 fallback`.
+
+| `guix.scm` + `flake.nix`
+| PRESENT (both); no `flake.lock` committed (good hygiene)
+| Root
+
+| `.well-known/` (security.txt, ai.txt, humans.txt)
+| PRESENT (all three + a `groove/` subdirectory)
+| `.well-known/`
+
+| SPDX headers on source
+| PRESENT on 12/12 Rust source, test, and bench files sampled
+| Every `crates/**.rs` carries `// SPDX-License-Identifier:
+  PMPL-1.0-or-later` in the first 3 lines.
+
+| `Containerfile` (not `Dockerfile`)
+| PRESENT (root). Zero `Dockerfile` at any depth.
+| Container policy met. Uses `gcr.io/distroless/cc-debian12:nonroot`
+  as final stage — *not* Chainguard, which is the preferred base
+  under CLAUDE.md. Soft drift, not a D-breaker.
+
+| `Justfile` + `Mustfile` (no `Makefile`)
+| PRESENT (Justfile 4 508 B, Mustfile 268 B); zero `Makefile`
+| RSR R-020 met. Justfile adds `crg-grade` and `crg-badge` recipes
+  that read from a `READINESS.md` file *that does not exist in this
+  repo* (lines 117-134); those recipes silently fall back to `X`.
+  See Self-Knowing Violations.
+
+| Contractile trident
+| PRESENT: `.machine_readable/INTENT.contractile`,
+  `TRUST.contractile`, `MUST.contractile`, `ADJUST.contractile`.
+  Runners under `contractiles/{dust,lust,must,k9}/` and under
+  `.machine_readable/contractiles/`. `bust.contractile` absent.
+| Trident met; six-verb layout partial — identical shape to
+  proof-of-work.
+
+| Remote
+| `origin → git@github.com:hyperpolymath/hesiod-dns-map.git` plus
+  four mirror remotes (bitbucket, codeberg, gitlab, sourcehut) with
+  push URLs configured.
+| `git remote -v`. GitHub-only push rule says the four mirrors must
+  be driven by downstream hub-and-spoke, not local push; presence
+  of mirror push URLs is informational only.
+
+| `.tool-versions`
+| PRESENT (12 bytes — `rust stable`)
+| Root
+
+| `hooks/`
+| PRESENT (`validate-codeql.sh`, `validate-permissions.sh`,
+  `validate-sha-pins.sh`, `validate-spdx.sh`)
+| Git-hook battery present.
+
+| `tests/` at root
+| PRESENT but *empty except* for `tests/fuzz/` scaffold
+| Actual test code lives under `crates/hesiod-lib/tests/`; the
+  root-level `tests/` is a near-empty fuzz placeholder. EXPLAINME
+  File Map points at "test(s)/" as the test location, which
+  misdirects anyone reading it.
+|===
+
+*RSR compliance verdict*: **met — D-floor satisfied**. The file
+inventory is a clean, populated D-floor. Workflows parse, LICENSE
+is PMPL-1.0-or-later with MPL-2.0 fallback, SPDX headers are
+uniform across all 12 Rust files, zero banned-language artefacts
+(no Dockerfile, no Makefile, no package.json, no tsconfig.json,
+no v.mod, no `.ts` files).
+
+The D-floor-*content* weakness is that ROADMAP.adoc is the
+untouched `rsr-template-repo` placeholder (generic "v0.1.0 -
+Foundation: Core functionality / Basic documentation / CI/CD
+pipeline") and EXPLAINME.adoc is a 577-byte stub. Neither
+disqualifies D, but both are the first thing a C audit destroys.
+
+=== Code and proofs
+
+[cols="2,1,3"]
+|===
+| Item | Count | Notes
+
+| Rust source files
+| 7 (`crates/**/*.rs` excluding tests/benches) — `hesiod-lib/src`:
+  `lib.rs` 12, `config.rs` 137, `health.rs` 74, `records.rs` 386,
+  `server.rs` 203, `zone.rs` 249; `hesinfo/src/main.rs` 271
+| Library entry `crates/hesiod-lib/src/lib.rs` with
+  `#![forbid(unsafe_code)]` (line 7). CLI entry
+  `crates/hesinfo/src/main.rs` also `#![forbid(unsafe_code)]`
+  (line 10). Good signal.
+
+| Total source LOC (`wc -l`)
+| 2 929 total (lib+bin ≈ 1 332, tests 1 285, bench 312)
+| Largest modules: `crates/hesiod-lib/src/records.rs` 386,
+  `crates/hesiod-lib/tests/contract_test.rs` 342, `aspect_test.rs`
+  339, `e2e_test.rs` 337, `benches/dns_bench.rs` 312,
+  `hesinfo/src/main.rs` 271, `property_test.rs` 267, `zone.rs` 249.
+
+| `#![forbid(unsafe_code)]`
+| PRESENT in both crate entry points
+| `crates/hesiod-lib/src/lib.rs:7` and
+  `crates/hesinfo/src/main.rs:10`. Zero `unsafe {` blocks found
+  across `crates/`.
+
+| `.unwrap()` / `.expect(...)` call-sites
+| 55 hits across 9 files (grep: `unsafe \{|\.unwrap\(\)|\.expect\(`;
+  no `unsafe {` hits, so all 55 are unwrap/expect)
+| Almost all `.expect(...)` calls use the literal string
+  `"TODO: handle error"` — see Self-Knowing Violations.
+
+| Dangerous-pattern scan (`believe_me`, `assert_total`,
+  `Admitted`, `sorry`, `unsafeCoerce`, `Obj.magic`) across
+  `crates/`
+| *0*
+| Rust project — patterns belong to Idris2/Coq/OCaml. Clean.
+
+| `panic-attack assail` run record
+| Not cited in STATE or any audit log
+| Pre-commit rule standing; running it on this workspace is a
+  routine follow-up, not a grading blocker.
+|===
+
+=== Test matrix — declared vs actual
+
+STATE.a2ml `[test-coverage]` and TEST-NEEDS.md declare:
+
+[cols="2,1,1,2"]
+|===
+| Suite | Declared | Grep-verifiable | Notes
+
+| unit-tests (inline in `crates/hesiod-lib/src/**`) | 16 | 16
+  `#[test]` attributes (config 2 + records 7 + zone 4 + server 3)
+| *matches exactly*.
+
+| property-tests (`tests/property_test.rs`) | 12 | 12 `#[test]`
+  blocks — all wrap `proptest!` macro bodies (12 `proptest!`
+  occurrences)
+| *matches exactly*.
+
+| e2e-tests (`tests/e2e_test.rs`) | 9 | 9 `#[test]` attributes
+| *matches exactly*.
+
+| aspect-tests (`tests/aspect_test.rs`) | 17 | 17 `#[test]` attributes
+| *matches exactly*.
+
+| contract-tests (`tests/contract_test.rs`) | 16 | 16 `#[test]` attributes
+| *matches exactly*.
+
+| benchmark-scenarios (`benches/dns_bench.rs`) | 10 (Criterion
+  groups) | 1 bench file, 312 LOC
+| Criterion groups not grep-counted; 10 scenarios plausible within
+  one harness file.
+
+| *total-tests* | *70+* | *70 `#[test]` attributes across 8 files*
+| *matches exactly (70 attrs + 10 bench scenarios)*. This is the
+  honest-count case — contrast with proof-of-work where the same
+  audit found 37-56% overclaims.
+|===
+
+Reconciliation: every declared test-suite count matches grep
+exactly. Total `#[test]` attributes across all source and test
+files = 70 — matches the "70+" claim precisely when the 10
+Criterion bench scenarios are added. *This is a correctly-counted
+test matrix.*
+
+CI coverage: `.github/workflows/rust-ci.yml` runs `cargo
+check --all-targets`, `cargo fmt --all -- --check`, and (further
+down, not shown) `cargo clippy` + `cargo test` on push and PR to
+any branch. SHA pins present but `actions/checkout@34e11487…` is
+v4 legacy (canonical v6.0.2 per 2026-04-17 estate audit — not a
+D-breaker, worth bumping). Last green run date not cited in
+STATE. `.hypatia/activity.jsonl` is *1 line*, dated 2026-03-08
+(`action=scan, fixes=0`) — a record of one scan, not a usage log.
+
+=== Annotation depth
+
+v2.0 C requires **per-file and per-directory orientation**. Evidence:
+
+- `docs/` contains *only* `accessibility/README.adoc` and
+  `compliance/ACCESSIBILITY.adoc` prior to this audit creating
+  `docs/governance/`. No `docs/architecture/`,
+  `docs/decisions/`, `docs/practice/`, `docs/specification/`.
+  Thinner than neurophone's two-file tree and comparable to
+  proof-of-work's single-file `docs/`.
+
+- Per-crate README coverage: *0*. Neither `crates/hesiod-lib/`
+  nor `crates/hesinfo/` carries a README or module-level
+  doc-comment block. The library `lib.rs` (12 LOC) has no
+  doc comment; it is three `pub mod` declarations and a
+  `forbid(unsafe_code)` attribute.
+
+- Per-module inline docs: essentially absent. Sample check:
+  `records.rs` 386 LOC defines four record types with zero
+  `///` doc comments at the top of the file or on type
+  definitions.
+
+- **EXPLAINME.adoc is a stub** (577 bytes, 38 lines). The File Map
+  has *one row* pointing to "test(s)/ | Test suite", which is
+  misleading — the root-level `tests/` directory is a fuzz
+  placeholder; real tests live under `crates/hesiod-lib/tests/`.
+  This is not a *fabricated* EXPLAINME (like proof-of-work or
+  fireflag had) — the pattern is different: it is an
+  *unpopulated template*, so the "deep per-file annotation" clause
+  fails through absence rather than invention. No path drift
+  to debunk, but no content to credit either.
+
+- README.adoc (6 118 bytes) is substantive: architecture diagram,
+  Hesiod primer, components list, directory tree *projected*
+  (including `configs/`, `scripts/` which do not fully exist —
+  only `configs/config.ncl` and `zones/example.hs` are present).
+  README describes aspirational module layout.
+
+- ROADMAP.adoc is the *untouched* rsr-template-repo placeholder:
+  `* [ ] Core functionality / * [ ] Basic documentation /
+  * [ ] CI/CD pipeline`. For a repo claiming C, the roadmap should
+  cite milestone evidence and dates.
+
+- `.machine_readable/6a2/` — five of six files are stubs (see
+  Structural Compliance). NEUROSYM.a2ml declares
+  `report-format = "logtalk"` which is *stale* — Hypatia removed
+  Logtalk 2026-04-12 (per estate memory). This is a
+  forward-only-docs violation.
+
+- Contractile files (INTENT/MUST/TRUST/ADJUST) are substantively
+  populated with definitions and universal-invariant sections —
+  *these* are the deepest annotation surface in the repo, and
+  they are real. MUST.contractile is 3 504 bytes with genuine
+  repo-specific invariants.
+
+The C clause requires per-file + per-directory orientation across
+*source and test* code; contractile depth does not compensate for
+missing per-crate READMEs and EXPLAINME being a stub.
+
+=== Dogfooding / home-stable evidence
+
+STATE.a2ml has *no* `[dogfooding-status]` section. There is no
+`docs/practice/DOGFOOD-LOG.adoc`. Grep under `.machine_readable/`
+for `dogfoo` returns zero hits.
+
+Indirect / adjacent signals:
+
+- `.github/workflows/dogfood-gate.yml` — a *gate* workflow (16 KB)
+  not a dogfood log. Gate presence without a `[dogfooding-status]`
+  catalogue is infrastructure for dogfooding, not evidence of it
+  (same pattern as proof-of-work and neurophone).
+
+- **Flatracoon satellite wiring — the declared dogfooder**. The
+  repo's scope-framing (README header "Part of the FlatRacoon
+  Network Stack") and STATE phase ("Testing & Quality") imply
+  hesiod-dns-map is dogfooded by flatracoon. Evidence:
+  * `systems-ecosystem/flatracoon/.gitmodules` includes
+    `netstack/modules/hesiod-dns-map` as a live submodule — *the
+    wiring exists*.
+  * `systems-ecosystem/flatracoon-netstack/configs/modules.ncl`
+    registers hesiod-dns-map at `path = "modules/hesiod-dns-map"`
+    with `layer = 'naming`, health + metrics endpoints, and
+    `deploy_command = "just deploy"` — but that path is the
+    *archived* flatracoon-netstack layout, and the live
+    `flatracoon/netstack/modules/` layout has no matching
+    `modules.ncl` registration at `netstack/modules/`. Dogfood
+    wiring is declared in the archived layout and undeclared in
+    the live one.
+  * No `configmap.yaml` / `deployment.yaml` reference from
+    flatracoon's live manifests was found. The repo's own
+    `manifests/configmap.yaml` + `deployment.yaml` + `service.yaml`
+    exist as templates but there is no record of a successful
+    deploy.
+
+- hesinfo CLI: `crates/hesinfo/src/main.rs` is a 271-LOC CLI that
+  does `serve` / `lookup` / `generate` against a Hesiod config.
+  Running it is feasible (`just serve`, `just lookup`), but there
+  is no recorded instance of it being run against the flatracoon
+  stack or producing a zone file in production.
+
+- No `[external-targets]`, `[issues-fed-back]`, or `[field-signal]`
+  sections. No external issues closed.
+
+- Completion-percentage = 85 in STATE is *higher* than proof-of-work
+  (50) or neurophone (65), inconsistent with the absence of any
+  dogfood log. The percentage appears to score "testing done" and
+  ignore "actually used anywhere".
+
+v2.0 C requires *continuous* home-context use with no known
+failures. The natural home context is flatracoon's netstack, and
+the wiring is present at the submodule level but the operational
+wiring (modules.ncl registration at the live path, deployment
+record, incident history) is missing. Nothing in the tree
+demonstrates that this DNS server has served a real Hesiod query
+against a real flatracoon deployment.
+
+=== External validation (Grade B / A)
+
+No `[external-targets]`. No `[issues-fed-back]`. No `[field-signal]`.
+
+External-adjacent signals:
+
+- Dependabot PRs (e.g. `chore(deps): bump rand from 0.9.2 to 0.9.4`,
+  #41 in recent git log) — automated dependency bumps, not external
+  users. Not field feedback under v2.0.
+- Mirror remotes configured (bitbucket/codeberg/gitlab/sourcehut) —
+  mirror presence is not usage.
+- No awesome-list PRs merged, no registry listings, no
+  directory/catalogue entries found.
+
+Per v2.0, reaching B requires *6+ diverse external targets*
+actually using the software with feedback fed back. hesiod-dns-map
+is at *0*.
+
+=== HYP-S005 canary
+
+HYP-S005 is the estate-wide detector for the pattern
+"self-declared C while evidence supports E or D". The flat
+`crg-grade = "C"` key under `[metadata]` is the exact shape the
+canary matches.
+
+hesiod-dns-map would trigger HYP-S005 on version + dogfooding axes:
+
+1. `version = "0.1.0"` (< 0.5.0 threshold) + self-declared C:
+   classic "C claimed pre-v0.5.0" canary hit.
+2. No `[dogfooding-status]` section: classic "C without dogfood
+   log" canary hit.
+3. Phase string `"Testing & Quality (CRG C)"` — self-referential
+   framing.
+
+Unlike proof-of-work, the test-count axis does *not* trigger: test
+counts are honest (70 declared, 70 grep-verifiable). The canary
+fires on structural evidence, not on overclaim.
+
+No HYP-S005 suppression comment is present and none is warranted.
+
+=== Self-knowing policy violations
+
+- **`.unwrap() → .expect("TODO: handle error")` anti-pattern**:
+  grep finds ~40 call-sites using the literal string
+  `.expect("TODO: handle error")` across `records.rs`, `zone.rs`,
+  `config.rs`, `server.rs`. Memory file
+  `feedback_unwrap_to_expect_antipattern.md` names this exact
+  pattern as an *anti-pattern*: "identical panic + fake debt
+  marker. Revert on sight." This is a standing estate-wide rule
+  breach. Canonical-vs-nested diff confirms this is *local drift
+  in canonical* — the nested copy at
+  `systems-ecosystem/flatracoon/netstack/modules/hesiod-dns-map/`
+  still uses clean `.unwrap()`. *The canonical repo is worse than
+  its mirror on this axis.*
+
+- **EXPLAINME stub (not fabrication)**: 577 bytes, File Map has
+  one row "test(s)/ | Test suite". Not fabricated (no
+  non-existent files claimed), but a stub. Distinct from the
+  proof-of-work / fireflag / reposystem pattern where EXPLAINME
+  *invents* source paths; here EXPLAINME simply was never filled
+  in. Both patterns fail the C "deep per-file annotation" clause.
+
+- **ROADMAP untouched template placeholder** in a repo claiming C.
+
+- **README copyright attribution defect**: README.adoc line 5 has
+  `// SPDX-FileCopyrightText: 2025 Hyperpolymath
+  <hyperpolymath@proton.me>`. Author Attribution rule says
+  "ALWAYS Jonathan D.A. Jewell" and "NEVER 'hyperpolymath' as
+  author name". One-commit fix.
+
+- **Justfile CRG recipes read non-existent READINESS.md**:
+  `crg-grade` and `crg-badge` (Justfile lines 117-134) grep
+  `READINESS.md` for a grade; `READINESS.md` does not exist in
+  this repo, so the recipes silently return `X` and emit an `X`
+  shield. Gamed workflow — lookup path is wrong either way
+  (grade is in STATE.a2ml, not READINESS.md in this repo).
+
+- **NEUROSYM.a2ml references removed feature**:
+  `report-format = "logtalk"` — Hypatia removed Logtalk
+  2026-04-12. Stale.
+
+- **6a2 template-drift**: five of six 6a2 files are stub schemas
+  (META, ECOSYSTEM, AGENTIC, NEUROSYM, PLAYBOOK). Same pattern
+  as proof-of-work.
+
+- **Mirror push URLs configured**: informational only (mirrors
+  must be driven by downstream hub-and-spoke, not local push),
+  standard across the estate — flagged for awareness, not graded.
+
+=== EXPLAINME fabrication check
+
+Per the named check: EXPLAINME.adoc is a *stub* (577 bytes, one
+File Map row), **not** a fabrication. The one claimed path —
+"test(s)/" — exists (root `tests/` directory is present but is a
+fuzz placeholder; real tests live under `crates/hesiod-lib/tests/`
+which EXPLAINME does not mention). There are no invented source
+paths. This is distinct from the proof-of-work / fireflag /
+reposystem pattern where EXPLAINME *invented* ten-plus
+non-existent source files; here the failure mode is emptiness,
+not invention.
+
+Classification: **stub, not fabrication**. Both fail the C
+annotation clause, but the remediation differs (populate vs.
+correct).
+
+=== Canonical vs nested-copy divergence
+
+Canonical: `/var/mnt/eclipse/repos/developer-ecosystem/hesiod-dns-map/`
+(has `.git/` as directory). Nested:
+`/var/mnt/eclipse/repos/systems-ecosystem/flatracoon/netstack/modules/hesiod-dns-map/`
+(has `.git` as submodule-gitdir pointer file →
+`../../../.git/modules/netstack/modules/hesiod-dns-map`).
+
+`diff -rq` (excluding `.git`) highlights:
+
+[cols="2,3"]
+|===
+| Axis | Finding
+
+| Freshness
+| Canonical is Apr 17 (recent `chore: estate-wide chore + stale-path
+  sweep (2026-04-17)` and `ci: wire hypatia-scan.yml to query own
+  Dependabot alerts`). Nested is Apr 4. Nested is 13 days behind
+  upstream — expected for a submodule not yet re-pointed.
+
+| `.unwrap()` vs `.expect("TODO")`
+| **Canonical has the anti-pattern; nested is clean.** ~40 sites
+  across `records.rs`, `zone.rs`, `config.rs`, `server.rs` in the
+  canonical use `.expect("TODO: handle error")`; the nested copy
+  at the same line numbers uses plain `.unwrap()`. The anti-pattern
+  was introduced *into canonical* after the last submodule bump,
+  making the canonical repo *worse* on this axis. Standing rule
+  says revert on sight.
+
+| TEST-NEEDS.md header
+| Canonical adds the lines `## CRG Grade: C — ACHIEVED 2026-04-04`
+  + blank line (not in nested). The grade claim lives in canonical
+  only.
+
+| Justfile CRG recipes
+| Canonical has the `crg-grade` + `crg-badge` recipes that read
+  the non-existent `READINESS.md` (lines 117-134); nested does not.
+  Grade-claiming infrastructure is canonical-only.
+
+| Canonical-only files
+| `.conflow`, `.conflow.yaml`, `deploy/`, `docs/` (accessibility +
+  compliance), `eclexiaiser.toml`, `generated/`, `k9iser.toml`,
+  `schemas/`, `.machine_readable/policies/`, `.well-known/groove/`,
+  `configs/config.ncl`, and this new `docs/governance/` — all
+  post-Apr-4 additions.
+
+| LICENSE
+| Canonical LICENSE is 18 397 bytes (full PMPL+MPL fallback text);
+  nested is 6 843 bytes (earlier format). Canonical is newer.
+
+| `.github/workflows/guix-nix-policy.yml` and `hypatia-scan.yml`
+| Differ — canonical has the 2026-04-17 hypatia rewire and the
+  `guix-nix-policy.yml` update.
+
+| `.gitignore`
+| Differ (755 vs 686 bytes) — minor.
+|===
+
+Net: the nested copy is the older, cleaner, less-grade-claiming
+copy. The canonical copy has both the more-recent tooling updates
+*and* the regression introduced by the `.unwrap() →
+.expect("TODO")` sweep that memory flags as an anti-pattern. A
+future submodule bump in flatracoon will pull the anti-pattern
+into the nested location unless it is reverted in canonical first.
+
+== Grade x Evidence Matrix
+
+[cols="1,1,3,3"]
+|===
+| Grade | Met? | Evidence supporting | Evidence against / gaps
+
+| X
+| n/a
+| 70 `#[test]` attributes exist → not X
+| —
+
+| F
+| n/a
+| Not superseded; no harm signal
+| —
+
+| E
+| ✓
+| >=1 test exists; 70 `#[test]` attributes across 8 files; property
+  / aspect / e2e / contract suites present; bench harness (Criterion)
+  present.
+| —
+
+| D
+| ✓ *(earned)*
+| Structural shell complete: 20 workflows (parse), 6a2 layout,
+  contractile trident, Justfile + Mustfile + Containerfile,
+  `.well-known/`, LICENSES trident, SPDX headers on 12/12 source
+  files, `#![forbid(unsafe_code)]` in both crate entry points, zero
+  `unsafe {` blocks, zero dangerous patterns, no banned-language
+  artefacts (no Dockerfile / Makefile / package.json / v.mod).
+  Scope documented in README.adoc (substantively), TEST-NEEDS.md,
+  and STATE.a2ml.
+| ROADMAP.adoc is unfilled template boilerplate; EXPLAINME.adoc is
+  a stub; README copyright attribution defect; five of six 6a2
+  files are stubs; NEUROSYM field stale. None of these drops the
+  D-floor.
+
+| C
+| *✗*
+| Rust code is real (2 929 LOC), uniformly SPDX-headered,
+  `#![forbid(unsafe_code)]` on both crates, zero `unsafe` blocks,
+  zero dangerous patterns, **honest test matrix: 70 declared = 70
+  grep-verifiable**, Criterion bench harness, Containerfile +
+  manifests scaffolded.
+| *No `[dogfooding-status]` section.* Dogfood wiring into flatracoon
+  is partial (submodule present; modules.ncl registration lives in
+  the archived netstack layout, not the live one; no deployment
+  record). EXPLAINME is a stub (not fabrication, but same failure
+  mode under the C clause). Zero per-crate READMEs. `docs/` pre-audit
+  was two accessibility files only. ROADMAP untouched template. 6a2
+  meta/ecosystem/agentic/neurosym/playbook are stubs. NEUROSYM
+  refers to removed `logtalk` backend. **`.unwrap() →
+  .expect("TODO: handle error")` anti-pattern introduced into
+  canonical (~40 sites) — standing rule says revert on sight.**
+  README copyright attribution wrong. Justfile CRG recipes read
+  non-existent `READINESS.md`. completion-percentage = 85 is
+  inconsistent with absence of dogfood log.
+
+| B
+| ✗
+| —
+| Zero external targets. Zero issues-fed-back. Zero field signal.
+
+| A
+| ✗
+| —
+| No field confirmation.
+|===
+
+== Verdict
+
+*Current CRG grade: **D (Alpha)**. Demote one grade from
+self-declared C.*
+
+Self-declared: *C*. Audited: *D*. One-grade honesty delta —
+matches proof-of-work's delta, smaller than neurophone's two-grade
+delta.
+
+Reasoning (one sentence): hesiod-dns-map passes the D-floor
+cleanly (workflows parse, SPDX uniform, two `forbid(unsafe_code)`
+entry points, zero dangerous patterns, and — uniquely among the
+recent C-claim audits — **a fully honest test count (70 declared,
+70 grep-verifiable)**) but fails the C clauses on three
+independent axes: no `[dogfooding-status]` and no dogfood log,
+EXPLAINME is a 577-byte stub that the C annotation clause cannot
+credit, and the canonical repo has ~40 sites of the named
+`.unwrap() → .expect("TODO: handle error")` anti-pattern that
+memory says "revert on sight" — introduced into canonical after
+the last submodule bump, so the nested mirror is *cleaner*.
+
+The D grade is earned, not conservative-by-default, on three
+positive signals:
+
+1. **Honest test matrix**: 70 declared in STATE.a2ml / TEST-NEEDS.md,
+   70 grep-verifiable across 8 test files. Unit 16 = grep 16,
+   property 12 = grep 12, e2e 9 = grep 9, aspect 17 = grep 17,
+   contract 16 = grep 16. No overclaim on any suite.
+2. **Real safety posture**: `#![forbid(unsafe_code)]` on *both*
+   library and binary crate entry points; zero `unsafe {` blocks
+   across 2 929 LOC; zero dangerous patterns; SPDX headers on
+   12/12 sampled source files; no banned-language artefacts.
+3. **Clean structural hygiene**: 20 workflows that parse, LICENSES
+   trident complete, `.well-known/` complete, contractile trident
+   populated with genuine repo-specific content (MUST.contractile
+   is 3 504 B of real constraints, not a template), Containerfile
+   uses distroless-nonroot.
+
+What blocks *immediate* promotion to C (do these first):
+
+. **Revert the `.unwrap() → .expect("TODO: handle error")`
+  anti-pattern across `records.rs`, `zone.rs`, `config.rs`,
+  `server.rs`.** Standing rule is to revert on sight. Either
+  restore plain `.unwrap()` (legitimate in test code) or write
+  proper `.expect("<concrete reason>")` messages — not the literal
+  string "TODO: handle error". This is the single most urgent
+  fix: the canonical repo regressed behind its nested mirror.
+. **Add `[dogfooding-status]` to STATE.a2ml** with concrete
+  done-entries: flatracoon submodule presence + version pointer;
+  `just serve` against a real config; `hesinfo lookup` against a
+  populated zone; any deployment of `manifests/deployment.yaml`
+  to a live cluster. Or drop the C claim until there is real use.
+. **Populate EXPLAINME.adoc** with a real File Map that cites
+  actual paths (`crates/hesiod-lib/src/*.rs`,
+  `crates/hesinfo/src/main.rs`, `crates/hesiod-lib/tests/*.rs`,
+  `zones/example.hs`, `manifests/*.yaml`). Replace the
+  "test(s)/" line. Target: substantive content, not 577 bytes.
+. **Add per-crate READMEs** for `crates/hesiod-lib/` and
+  `crates/hesinfo/`. Add module-level doc-comment blocks to
+  `lib.rs`, `records.rs`, `zone.rs`, `server.rs`.
+. **Populate ROADMAP.adoc** with real milestones + dates. Replace
+  the rsr-template-repo placeholder.
+. **Fill out the 6a2 stubs** (META, ECOSYSTEM, AGENTIC, NEUROSYM,
+  PLAYBOOK) with content appropriate to a DNS server + Hesiod
+  naming project. Remove `report-format = "logtalk"` from
+  NEUROSYM (Hypatia no longer supports Logtalk).
+. **Fix README copyright**: replace
+  `SPDX-FileCopyrightText: 2025 Hyperpolymath <hyperpolymath@proton.me>`
+  with `SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>`.
+. **Remove or fix Justfile `crg-grade`/`crg-badge` recipes**:
+  either delete them, or point them at STATE.a2ml (`crg-grade`
+  key under `[metadata]`) instead of a non-existent
+  `READINESS.md`.
+. **Reconcile flatracoon dogfood wiring**: add a `modules.ncl`
+  registration at the *live* `flatracoon/netstack/` layout (not
+  only the archived `flatracoon-netstack/configs/modules.ncl`).
+  Bump the submodule pointer after the `.unwrap()` revert lands.
+. **Bump `actions/checkout` pins** from v4 (`34e114876b0b…`) to
+  v6.0.2 (`de0fac2e4500dabe0009e67214ff5f5447ce83dd`) across the
+  workflow set, per 2026-04-17 estate drift audit.
+
+What blocks promotion to B (after C):
+
+. Zero external targets. Need 6+ diverse — the natural set for a
+  Hesiod/DNS server is: flatracoon production deploy, a Kubernetes
+  cluster using `manifests/`, a second independent DNS client,
+  a `dig` / `nsupdate` interop test against a real resolver, a
+  Nix-packaging downstream, a `guix.scm` downstream build.
+. No external-contributor flow. Dependabot PRs don't count.
+. A DNS server with no live-query log cannot feed back issues —
+  "home-stable, dogfooded" needs query logs, bug reports from a
+  real deployment, etc.
+
+== Notes on Non-Negotiables Respected by this Audit
+
+- The two `#![forbid(unsafe_code)]` attributes are respected as
+  genuine safety signals and counted toward the D positive-signal set.
+- STATE.a2ml `[test-coverage]` is internally self-consistent and
+  externally verifiable; what destroys the C claim is not the
+  test-matrix honesty (which is exemplary) but the dogfood +
+  annotation + anti-pattern trio.
+- The nested copy at `flatracoon/netstack/modules/hesiod-dns-map/`
+  is informational only — this audit grades the canonical. Drift
+  is documented in a dedicated section so a future submodule bump
+  does not silently import the `.unwrap()` anti-pattern into the
+  flatracoon tree.
+- HYP-S005 would flag this repo under the
+  `[metadata] crg-grade = "C"` + `version = "0.1.0"` + no-dogfood
+  rule. No suppression is warranted.
+- Standing rules respected: PMPL-1.0-or-later SPDX on all source,
+  GitHub-only push origin (mirror push URLs are informational
+  remotes), Rust (not Go / not TS / not Python).
+
+== STATE.a2ml update recommendation
+
+Recommended (do NOT execute as part of this audit) — edit
+`.machine_readable/6a2/STATE.a2ml`:
+
+[source,toml]
+----
+[metadata]
+project = "hesiod-dns-map"
+version = "0.1.0"
+last-updated = "2026-04-18"
+status = "active"
+crg-grade = "D"                # was "C"
+crg-grade-previous = "C"       # audit trail
+crg-audit = "docs/governance/CRG-AUDIT-2026-04-18.adoc"
+crg-next-target = "C"
+
+[project-context]
+name = "hesiod-dns-map"
+completion-percentage = 55     # was 85 — closer to evidence
+phase = "D-earned; C-lift needs anti-pattern revert, dogfood log, EXPLAINME populate, per-crate READMEs."
+
+[test-coverage]
+# unchanged — test matrix is honest and audited
+unit-tests = 16
+property-tests = 12
+e2e-tests = 9
+aspect-tests = 17
+contract-tests = 16
+benchmark-scenarios = 10
+total-tests = "70"             # drop the "+" — 70 is exact
+status = "All passing"
+
+[blockers]
+unwrap-antipattern = "~40 .expect('TODO: handle error') sites across records.rs/zone.rs/config.rs/server.rs; revert on sight per feedback_unwrap_to_expect_antipattern.md. Canonical regressed behind nested mirror."
+dogfood-log-missing = "No [dogfooding-status] section. Flatracoon wiring partial: submodule present but modules.ncl registration is in archived flatracoon-netstack, not live flatracoon/netstack/."
+explainme-stub = "577-byte File Map stub; populate with real paths."
+roadmap-unfilled = "ROADMAP.adoc is the rsr-template-repo placeholder."
+sixa2-stubs = "Five of six 6a2 files are schema skeletons; NEUROSYM references removed logtalk backend."
+readme-copyright = "README.adoc SPDX-FileCopyrightText uses 'Hyperpolymath' as author; must be 'Jonathan D.A. Jewell'."
+justfile-crg-recipes = "crg-grade/crg-badge read non-existent READINESS.md; point at STATE.a2ml or remove."
+checkout-pin-drift = "rust-ci.yml uses actions/checkout@v4 legacy pin; estate canonical is v6.0.2 since 2026-04-17."
+----
+
+Demote target: *D*. Route-to-C is the nine-item fix list above;
+item 1 (the `.unwrap()` anti-pattern revert) is the single most
+urgent action because canonical is currently *worse* than its
+nested mirror and a future submodule bump will propagate the
+regression.
+
+== Related Files
+
+- `.machine_readable/6a2/STATE.a2ml` — authoritative self-declared
+  state; recommend demote C→D with notes citing this audit.
+- `TEST-NEEDS.md` — declared 70+ tests; exactly matches grep
+  (no reconciliation needed).
+- `EXPLAINME.adoc` — 577-byte stub; populate with real File Map.
+- `ROADMAP.adoc` — unfilled rsr-template-repo placeholder.
+- `README.adoc` — copyright attribution `Hyperpolymath
+  <hyperpolymath@proton.me>` should be `Jonathan D.A. Jewell
+  <j.d.a.jewell@open.ac.uk>`.
+- `Justfile` lines 117-134 — `crg-grade`/`crg-badge` recipes point
+  at non-existent `READINESS.md`.
+- `crates/hesiod-lib/src/{records,zone,config,server}.rs` — ~40
+  `.expect("TODO: handle error")` anti-pattern sites; revert to
+  `.unwrap()` or write concrete messages.
+- `.machine_readable/6a2/NEUROSYM.a2ml` — `report-format =
+  "logtalk"` is stale; remove (Hypatia dropped Logtalk 2026-04-12).
+- `systems-ecosystem/flatracoon/netstack/modules/hesiod-dns-map/`
+  — nested mirror; *currently cleaner than canonical* on the
+  `.unwrap()` axis. Bump the submodule pointer only after the
+  anti-pattern revert lands in canonical.
+- `systems-ecosystem/flatracoon-netstack/configs/modules.ncl` —
+  registers hesiod-dns-map at `modules/hesiod-dns-map` layer
+  `'naming`; this is the *archived* layout. The live
+  `flatracoon/netstack/` has no matching registration.
+- `docs/governance/CRG-LIFT-PLAN-2026-04-18.adoc` — *to be written*
+  if a C-lift sprint is scheduled.
+
+_End of audit._
