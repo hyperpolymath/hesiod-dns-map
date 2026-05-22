@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! UDP DNS server handling HS-class TXT queries using hickory-proto.
 
 use std::net::SocketAddr;

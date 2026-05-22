@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # Generate config.json via: nickel export configs/hesiod/flatracoon.ncl > config.json
 apiVersion: v1
 kind: ConfigMap

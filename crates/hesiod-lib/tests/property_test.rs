@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! Property-based tests for hesiod-lib using proptest.
 
 use hesiod_lib::records::*;

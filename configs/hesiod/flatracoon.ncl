@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # Hesiod DNS configuration for FlatRacoon network stack
 
 let schema = import "schema.ncl"

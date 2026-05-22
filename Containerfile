@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # Multi-stage build for hesiod-dns-map
 
 FROM rust:1.85-slim AS builder

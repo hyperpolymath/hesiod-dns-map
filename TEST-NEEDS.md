@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 # TEST-NEEDS.md - CRG C Achievement Report
 
 ## CRG Grade: C — ACHIEVED 2026-04-04
@@ -128,7 +128,7 @@ hesiod-dns-map has been upgraded to **CRG Grade C** with comprehensive test cove
 - ✅ Benchmarks compile: `cargo bench --bench dns_bench`
 - ✅ No unsafe code: `#![forbid(unsafe_code)]` enforced
 - ✅ No unwrap() without context: `.expect("message")` used throughout
-- ✅ SPDX headers on all test files: PMPL-1.0-or-later
+- ✅ SPDX headers on all test files: MPL-2.0
 - ✅ Deterministic: Same inputs → same outputs
 
 ## Code Coverage

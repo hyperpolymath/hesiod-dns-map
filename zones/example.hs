@@ -1,4 +1,4 @@
-; SPDX-License-Identifier: PMPL-1.0-or-later
+; SPDX-License-Identifier: MPL-2.0
 ; Example Hesiod zone file for flatracoon.internal
 ; Records use HS (Hesiod) class with TXT resource type
 ;

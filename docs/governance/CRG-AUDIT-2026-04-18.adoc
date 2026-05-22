@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 = hesiod-dns-map — CRG Audit (2026-04-18)
@@ -108,10 +108,10 @@ Publication requires B+. Long alpha is discipline, not shame.
 | Two accessibility-related files; no architecture or decision log.
 
 | `LICENSE` + `LICENSES/` directory
-| PRESENT (`LICENSE` is PMPL-1.0-or-later full text,
-  `LICENSES/PMPL-1.0-or-later.txt`, `LICENSES/MPL-2.0.txt`)
+| PRESENT (`LICENSE` is MPL-2.0 full text,
+  `LICENSES/MPL-2.0.txt`, `LICENSES/MPL-2.0.txt`)
 | Root. Committed 2026-04-17 in `cf4c591 chore: update LICENSE to
-  PMPL-1.0-or-later with MPL-2.0 fallback`.
+  MPL-2.0 with MPL-2.0 fallback`.
 
 | `guix.scm` + `flake.nix`
 | PRESENT (both); no `flake.lock` committed (good hygiene)
@@ -124,7 +124,7 @@ Publication requires B+. Long alpha is discipline, not shame.
 | SPDX headers on source
 | PRESENT on 12/12 Rust source, test, and bench files sampled
 | Every `crates/**.rs` carries `// SPDX-License-Identifier:
-  PMPL-1.0-or-later` in the first 3 lines.
+  MPL-2.0` in the first 3 lines.
 
 | `Containerfile` (not `Dockerfile`)
 | PRESENT (root). Zero `Dockerfile` at any depth.
@@ -174,7 +174,7 @@ Publication requires B+. Long alpha is discipline, not shame.
 
 *RSR compliance verdict*: **met — D-floor satisfied**. The file
 inventory is a clean, populated D-floor. Workflows parse, LICENSE
-is PMPL-1.0-or-later with MPL-2.0 fallback, SPDX headers are
+is MPL-2.0 with MPL-2.0 fallback, SPDX headers are
 uniform across all 12 Rust files, zero banned-language artefacts
 (no Dockerfile, no Makefile, no package.json, no tsconfig.json,
 no v.mod, no `.ts` files).
@@ -748,7 +748,7 @@ What blocks promotion to B (after C):
 - HYP-S005 would flag this repo under the
   `[metadata] crg-grade = "C"` + `version = "0.1.0"` + no-dogfood
   rule. No suppression is warranted.
-- Standing rules respected: PMPL-1.0-or-later SPDX on all source,
+- Standing rules respected: MPL-2.0 SPDX on all source,
   GitHub-only push origin (mirror push URLs are informational
   remotes), Rust (not Go / not TS / not Python).
 

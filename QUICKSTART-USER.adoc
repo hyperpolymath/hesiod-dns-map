@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Template: QUICKSTART-USER.adoc — 5-minute path to working software
 // Replace hesiod-dns-map, Hesiod Dns Map — See README.adoc for details., just run, Hesiod Dns Map started successfully. with actuals
 = hesiod-dns-map — Quick Start for Users

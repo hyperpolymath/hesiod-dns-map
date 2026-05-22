@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! hesiod-lib: Hesiod DNS naming system library.
 //!
 //! Provides HS-class TXT record management, a lightweight UDP DNS server,

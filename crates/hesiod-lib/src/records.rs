@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 //! Hesiod record types: Passwd, Group, Service, Filsys
 //! Each record supports round-trip TXT serialization.
 
