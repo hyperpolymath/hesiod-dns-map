@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MPL-2.0 -->
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 # TEST-NEEDS.md - CRG C Achievement Report
 
 ## CRG Grade: C — ACHIEVED 2026-04-04
