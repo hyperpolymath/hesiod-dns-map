@@ -1,0 +1,85 @@
+== Changelog
+
+All notable changes to `+hesiod-dns-map+` will be documented in this
+file.
+
+This file is generated from conventional commits by the
+https://github.com/hyperpolymath/standards/blob/main/.github/workflows/changelog-reusable.yml[`+changelog-reusable.yml+`]
+workflow (`+hyperpolymath/standards#206+`). Adopt the workflow in this
+repo’s CI to keep this file in sync automatically — see
+https://github.com/hyperpolymath/standards/blob/main/templates/cliff.toml[`+templates/cliff.toml+`]
+for the canonical config.
+
+The format follows https://keepachangelog.com/en/1.1.0/[Keep a
+Changelog]; this project aims to follow
+https://semver.org/spec/v2.0.0.html[Semantic Versioning].
+
+=== [Unreleased]
+
+==== Added
+
+* feat(crg): add crg-grade and crg-badge justfile recipes
+* feat: wire conflow config validation pipeline
+* feat: add stapeln.toml layer-based container definitionfrom existing
+Containerfile to stapeln format.Chainguard base, security hardening,
+SBOM generation.-Authored-By: Claude Opus 4.6 (1M context)
+noreply@anthropic.com
+* feat: deploy UX Manifesto infrastructure
+* feat: add CLADE.a2ml — clade taxonomy declaration
+* feat: add bot directives, contractiles, and ecosystem cross-refs
+* feat: implement Hesiod DNS naming system with Rust workspaceworkspace
+with two crates:- hesiod-lib: HS-class TXT record types (passwd, group,
+service, filsys),zone management, UDP DNS server (hickory-proto), Axum
+health/metrics- hesinfo: CLI with lookup, serve, generate, validate
+subcommandsincludes Nickel config schemas, K8s manifests, FlatRacoon
+module, Containerfile, example zone file, and real justfile recipes.
+tests passing, clippy clean.-Authored-By: Claude Opus 4.6
+noreply@anthropic.com
+* feat: add AI Gatekeeper Protocol manifest
+* feat(ci): enable Hypatia scanning
+
+==== Fixed
+
+* fix(ci): bump a2ml/k9-validate-action pins to canonical (#44)
+* fix(ci): sync hypatia-scan.yml to canonical (#43)
+* fix(ci): build Hypatia escript from repo root (estate dogfood drift)
+* fix: set correct Groove capability type (was: custom)
+* fix(scorecard): enforce granular permissions and add fuzzing
+placeholder
+* fix(ci): Resolve workflow-linter self-matching and metadata issues
+* fix(scorecard): enforce granular permissions and add fuzzing
+placeholder
+* fix(ci): Resolve workflow-linter self-matching and metadata issues
+* fix: correct email jonathan.jewell → j.d.a.jewell
+* fix: SPDX headers (AGPL→PMPL), email, author name
+
+==== Changed
+
+* refactor: migrate 6SCM → 6A2 (.scm → .a2ml format)
+
+==== Documentation
+
+* docs: record tech-debt audit findings (2026-05-26) (#49)
+* docs(governance): CRG v2.0 STRICT audit — C (declared) -> D (honest)
+* docs: add EXPLAINME.adoc — prove-it file backing README claims
+* docs: add CONTRIBUTING.md
+* docs: add checkpoint files for state tracking
+
+==== CI
+
+* ci(rust): convert rust-ci.yml to thin wrapper (standards#174) (#48)
+* ci: redistribute concurrency-cancel guard to read-only check workflows
+(#46)
+* ci: bump actions/upload-artifact SHA to current v4 (#42)
+* ci: SHA-pin hyperpolymath validate-actions in dogfood-gate
+* ci: wire hypatia-scan.yml to query own Dependabot alerts
+
+=== Pre-history
+
+Prior commits to this file’s introduction are recorded in git history
+but not formally classified into Keep-a-Changelog sections. To backfill,
+run `+git cliff -o CHANGELOG.md+` locally using the canonical
+https://github.com/hyperpolymath/standards/blob/main/templates/cliff.toml[`+cliff.toml+`]
+— this is one-shot mechanical work.
+
+'''''
