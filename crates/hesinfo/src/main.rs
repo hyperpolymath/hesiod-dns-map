@@ -97,8 +97,7 @@ async fn main() -> Result<()> {
 /// Send a DNS query to a Hesiod server and print the result.
 async fn cmd_lookup(key: &str, map: &str, server: &str, port: u16) -> Result<()> {
     use hickory_proto::op::{Message, MessageType, OpCode, Query};
-    use hickory_proto::rr::record_data::RData;
-    use hickory_proto::rr::{DNSClass, Name, RecordType};
+    use hickory_proto::rr::{DNSClass, Name, RData, RecordType};
     use tokio::net::UdpSocket;
 
     let map_type: MapType = map.parse()?;
@@ -114,11 +113,8 @@ async fn cmd_lookup(key: &str, map: &str, server: &str, port: u16) -> Result<()>
     query.set_query_type(RecordType::TXT);
     query.set_query_class(DNSClass::HS);
 
-    let mut msg = Message::new();
-    msg.set_id(rand_id());
-    msg.set_message_type(MessageType::Query);
-    msg.set_op_code(OpCode::Query);
-    msg.set_recursion_desired(false);
+    let mut msg = Message::new(rand_id(), MessageType::Query, OpCode::Query);
+    msg.metadata.recursion_desired = false;
     msg.add_query(query);
 
     let wire = msg.to_vec()?;
@@ -135,13 +131,13 @@ async fn cmd_lookup(key: &str, map: &str, server: &str, port: u16) -> Result<()>
 
     let response = Message::from_vec(&buf[..len])?;
 
-    if response.answers().is_empty() {
+    if response.answers.is_empty() {
         println!("No records found for {}.{}", key, map_type.label());
     } else {
-        for answer in response.answers() {
-            let rdata: &RData = answer.data();
+        for answer in &response.answers {
+            let rdata: &RData = &answer.data;
             if let RData::TXT(txt) = rdata {
-                for s in txt.iter() {
+                for s in txt.txt_data.iter() {
                     println!("{}", std::str::from_utf8(s).unwrap_or("<binary>"));
                 }
             }
@@ -242,11 +238,11 @@ fn cmd_validate(file: &std::path::Path) -> Result<()> {
             None
         };
 
-        if let Some(mt) = map_type
-            && let Err(e) = hesiod_lib::records::HesiodRecord::from_txt(mt, txt_data)
-        {
-            eprintln!("line {}: invalid {} record: {}", line_no + 1, mt.label(), e);
-            errors += 1;
+        if let Some(mt) = map_type {
+            if let Err(e) = hesiod_lib::records::HesiodRecord::from_txt(mt, txt_data) {
+                eprintln!("line {}: invalid {} record: {}", line_no + 1, mt.label(), e);
+                errors += 1;
+            }
         }
     }
 

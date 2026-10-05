@@ -5,10 +5,9 @@ use std::net::SocketAddr;
 use std::sync::Arc;
 
 use anyhow::{Context, Result};
-use hickory_proto::op::{Header, Message, OpCode, ResponseCode};
+use hickory_proto::op::{Message, Metadata, OpCode, ResponseCode};
 use hickory_proto::rr::rdata::TXT;
-use hickory_proto::rr::record_data::RData;
-use hickory_proto::rr::{DNSClass, Name, Record, RecordType};
+use hickory_proto::rr::{DNSClass, Name, RData, Record, RecordType};
 use tokio::net::UdpSocket;
 use tracing::{debug, error, info, warn};
 
@@ -78,24 +77,19 @@ pub async fn run_dns_server(zone: HesiodZone, port: u16) -> Result<Arc<DnsServer
 /// Parse a DNS query and build a response.
 fn handle_query(data: &[u8], state: &DnsServerState) -> Result<Vec<u8>> {
     let request = Message::from_vec(data).context("parsing DNS query")?;
-    let mut response = Message::new();
-
-    let mut header = Header::response_from_request(request.header());
-    header.set_authoritative(true);
-
-    response.set_header(header);
+    let mut response = Message::response(request.metadata.id, request.metadata.op_code);
+    response.metadata = Metadata::response_from_request(&request.metadata);
+    response.metadata.authoritative = true;
 
     // Copy the question section
-    for query in request.queries() {
-        response.add_query(query.clone());
-    }
+    response.add_queries(request.queries.iter().cloned());
 
-    if request.header().op_code() != OpCode::Query {
-        response.set_response_code(ResponseCode::NotImp);
+    if request.metadata.op_code != OpCode::Query {
+        response.metadata.response_code = ResponseCode::NotImp;
         return Ok(response.to_vec()?);
     }
 
-    for query in request.queries() {
+    for query in &request.queries {
         let name = query.name();
         let qclass_raw: u16 = query.query_class().into();
         let qtype = query.query_type();
@@ -116,15 +110,15 @@ fn handle_query(data: &[u8], state: &DnsServerState) -> Result<Vec<u8>> {
             let txt_rdata = TXT::new(vec![txt_data.clone()]);
             let mut record =
                 Record::from_rdata(name.clone(), state.zone.ttl, RData::TXT(txt_rdata));
-            record.set_dns_class(DNSClass::HS);
+            record.dns_class = DNSClass::HS;
             response.add_answer(record);
         } else {
             debug!("no record found for {}", name);
         }
     }
 
-    if response.answers().is_empty() {
-        response.set_response_code(ResponseCode::NXDomain);
+    if response.answers.is_empty() {
+        response.metadata.response_code = ResponseCode::NXDomain;
     }
 
     Ok(response.to_vec()?)

@@ -11,7 +11,7 @@ repository.workspace = true
 
 [dependencies]
 hesiod-lib = { path = "../hesiod-lib" }
-hickory-proto = "0.25.2"
+hickory-proto = "0.26.3"
 clap = { version = "4.5.57", features = ["derive"] }
 tokio.workspace = true
 serde.workspace = true
