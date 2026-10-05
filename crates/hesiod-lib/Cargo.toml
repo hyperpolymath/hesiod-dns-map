@@ -10,7 +10,7 @@ license.workspace = true
 repository.workspace = true
 
 [dependencies]
-hickory-proto = "0.25.2"
+hickory-proto = "0.26.3"
 tokio.workspace = true
 serde.workspace = true
 serde_json.workspace = true
